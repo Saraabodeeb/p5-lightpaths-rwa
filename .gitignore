@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+data/*.gz
+data/*.txt
+data/processed/
+.DS_Store
