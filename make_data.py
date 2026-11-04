@@ -20,8 +20,19 @@ def download():
         path = f"data/{local}"
         if os.path.exists(path) and os.path.getsize(path) > 0:
             continue
-        print("downloading", remote)
-        urllib.request.urlretrieve(f"{BASE}/{remote}", path)
+        print("downloading", remote, flush=True)
+        part = path + ".part"
+        with urllib.request.urlopen(f"{BASE}/{remote}", timeout=60) as r, open(part, "wb") as f:
+            while True:
+                chunk = r.read(1 << 16)
+                if not chunk:
+                    break
+                f.write(chunk)
+        if local.endswith(".gz"):                  # a truncated download raises EOFError here
+            with gzip.open(part) as g:
+                while g.read(1 << 20):
+                    pass
+        os.replace(part, path)                     # the final name appears only when complete
 
 
 download()
