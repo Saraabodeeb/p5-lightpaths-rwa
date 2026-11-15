@@ -18,7 +18,7 @@ Topology: topo-2003-04-10.txt (12 routers, 15 physical cables = 30 directed link
 - 5-minute data summed to hourly. Seed = 42.
 
 ## Generated parameters (added later, config file)
-Number of wavelengths, lightpath capacity, reach limit: GENERATED, documented in the config.
+Number of wavelengths, reach limit and the CSP assignment cap are GENERATED (see the table below). Link capacity is NOT used: the CSP counts wavelengths per link, not Mbps.
 
 ## Known limits
 - Traffic destined to AS11537 (Abilene itself) is not included in the matrices.
@@ -26,3 +26,21 @@ Number of wavelengths, lightpath capacity, reach limit: GENERATED, documented in
 - Data is from 2004.
 - The time zone and exact start hour of each file are not stated in the readme.
   We assume each file starts at 00:00 on its listed date.
+
+## Generated and design parameters (set in the code, no config file)
+| Parameter | Value | Real or generated | Where |
+|-----------|-------|-------------------|-------|
+| Reach limit | 5000 km | GENERATED | integration.py (REACH_KM) |
+| Wavelengths per link (W) | 3, 4 or 8 depending on the experiment | GENERATED | experiment scripts |
+| Number of requests (K) | varies per experiment | GENERATED | experiment scripts |
+| Routes per request | 3, then 5 if the CSP fails | design choice | integration.py |
+| CSP assignment cap | 20,000 inside plan(); 100,000 in exp2_final.py | GENERATED | integration.py, exp2_final.py |
+| Link length | great-circle (haversine) distance from router coordinates | DERIVED from real coordinates | search.py |
+| Random seeds | 42 for data and bootstrap; NN seeds 0-4 | - | make_data.py, forecast.py |
+
+## germany50 (experiment 1 only, 50-node network)
+Source: TopoHub copy of the SNDlib germany50 network (GML file, data/germany50.gml).
+50 nodes, 88 undirected cables (= 176 directed links in our graph).
+Node coordinates (lat/lon): REAL. Link length: DERIVED with the same haversine function as Abilene.
+No traffic data is used for this network (search experiment only).
+Licence: not verified. Cite SNDlib and the TopoHub paper.
