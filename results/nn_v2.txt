@@ -1,0 +1,12 @@
+last hour on VALIDATION: K=10 0.890 | MAE 0.3923
+
+max_iter= 60: validation MAE 0.3974
+max_iter=150: validation MAE 0.4063
+max_iter=300: validation MAE 0.4060
+
+chosen by validation: max_iter=60
+
+--- TEST (week X10) ---
+K=10: NN 0.897 | last hour 0.893 | diff +0.0043  95% CI [-0.0014, +0.0100] | hours NN better/equal/worse: 43/84/41
+K=20: NN 0.916 | last hour 0.911 | diff +0.0050  95% CI [+0.0007, +0.0094] | hours NN better/equal/worse: 69/51/48
+K=40: NN 0.935 | last hour 0.928 | diff +0.0063  95% CI [+0.0042, +0.0083] | hours NN better/equal/worse: 87/41/40
