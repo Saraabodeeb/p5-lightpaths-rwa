@@ -21,7 +21,7 @@ def trace(src, dst, method, max_lines=40):
     frontier = [(h(src), next(tie), 0.0, [src])]
     expanded = 0
     print(f"\n[{method.upper()}] {short(src)} -> {short(dst)}")
-    print(f"{'step':>4} {'expanded path':34s} {'g km':>8} {'h km':>8} {'f km':>8}")
+    print(f"{'step':>4} {'expanded path':46s} {'g km':>8} {'h km':>8} {'f km':>8}")
     while frontier:
         f, _, g, path = heapq.heappop(frontier)
         node = path[-1]
@@ -30,7 +30,7 @@ def trace(src, dst, method, max_lines=40):
             return expanded, g
         expanded += 1
         if expanded <= max_lines:
-            print(f"{expanded:>4} {' > '.join(short(p) for p in path):34s} "
+            print(f"{expanded:>4} {' > '.join(short(p) for p in path):46s} "
                   f"{g:>8.1f} {h(node):>8.1f} {f:>8.1f}")
         for nbr, w in ADJ[node]:
             if nbr in path:
@@ -85,6 +85,7 @@ if __name__ == "__main__":
     show(f"b) real instance: test hour {chosen[0]}, K={K} requests, W={W} wavelengths",
          chosen[1], W, CAP)
     print("'limit' = assignment cap reached: no answer, which is NOT a proof of infeasibility.")
+    print("This instance was picked because it shows the contrast. Over 5 hours at K=16, W=3: BT proves infeasibility in 2 of 5, BT+FC in 4 of 5 (results/exp2.txt).")
 
     section("3. WHOLE SYSTEM WITH NN ON vs OFF (W=4, K=20)")
     true, nn0, last = true_values(), nn_predictions()[0], last_hour_predictions()

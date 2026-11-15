@@ -41,6 +41,7 @@ All commands are run from the project folder with the environment active.
     python exp2_final.py         # experiment 2: BT vs BT+FC vs BT+FC+AC3 (5-10 minutes)
     python exp3_final.py         # experiment 3: NN vs last hour inside the system (10-15 minutes)
     python run_demo.py           # integrated demo, writes demo_output.png
+    python demo_live.py          # live demo: search trace, CSP with and without FC / AC-3, NN on vs off
 
 The first call that needs the NN predictions trains 5 networks (about 1 minute) and caches them in data/processed/nn_test_preds.npy. Outputs of the tests and experiments are saved in results/.
 
@@ -51,11 +52,11 @@ The first call that needs the NN predictions trains 5 networks (about 1 minute) 
 | nn | forecast.py, baselines.py, nn_v1.py, nn_v2.py |
 | search | search.py (BFS / UCS / A* with counters) |
 | csp | csp.py (BT, FC, AC-3 with counters), oracle.py (independent OR-tools solver, used only to label cases as feasible or infeasible) |
-| integration | integration.py (plan()), run_demo.py |
+| integration | integration.py (plan()), run_demo.py, demo_live.py |
 | eval | exp1.py, exp2_final.py, exp3_final.py |
 | tests | test_search.py, test_csp.py, test_system.py |
 
-Exploratory scripts kept for history (superseded by the final experiment scripts): run_csp_demo.py, run_exp2.py, exp2b.py, run_exp3.py, run_exp3b.py, inspect_g50.py.
+Exploratory scripts kept for history (superseded by the final experiment scripts): run_csp_demo.py, run_exp2.py, exp2b.py, run_exp3.py, run_exp3b.py, inspect_g50.py, look.py.
 
 ## Main results (details in results/)
 - Search: A* and UCS costs match networkx on all 132 Abilene pairs and all 2450 germany50 pairs; the heuristic never overestimates. A* expands far fewer states than UCS on germany50 (6.9 vs 275.7 for the best route). BFS returns the fewest-hops route, which is 4% (Abilene) to 11% (germany50) longer in km. Counters count partial paths, because a state is a node together with the path so far.
