@@ -1,0 +1,6 @@
+known-answer test OK
+mismatches: 0
+average nodes per request (132 requests, k=3):
+  bfs   expanded   21.5   generated   31.8
+  ucs   expanded   20.3   generated   29.9
+  astar expanded   10.9   generated   18.6

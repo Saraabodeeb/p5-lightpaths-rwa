@@ -1,0 +1,13 @@
+OK   N1 hour 700, K=10, W=8: served 10, blocked 0
+OK   N2 hour 700, K=20, W=8: served 20, blocked 0
+OK   N3 hour 740, K=15, W=4: served 15, blocked 0
+OK   N4 random scores, K=10, W=8: served 10, blocked 0
+OK   N5 K=1, W=1: served 1, blocked 0
+OK   E1 K=0 (nothing requested): served 0, blocked 0
+OK   E2 K=60 > capacity, every request accounted for: served 52, blocked 8
+OK   E3 all scores tied: deterministic, served 10
+OK   I1 zero wavelengths: served 0, blocked 5
+     NO SOLUTION: 5 request(s) - wavelengths used up (proved)
+OK   I2 reach limit 100 km: served 0, blocked 3
+     NO SOLUTION: 3 request(s) - no route within reach limit
+all system tests passed

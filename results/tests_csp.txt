@@ -1,0 +1,12 @@
+OK   N1 two disjoint requests, 1 wavelength
+OK   N2 two sharing a link, 2 wavelengths
+OK   N3 three sharing a link, 3 wavelengths
+OK   N4 second route avoids the clash, 1 wavelength
+OK   N5 chain A-B, B-C, 2 wavelengths
+OK   E1 zero requests
+OK   E2 one request, one route, one wavelength
+OK   E3 a request with no route at all
+OK   I1 two requests, same only route, 1 wavelength
+OK   I2 four requests on one link, 3 wavelengths
+OK   AC-3 detects I1 with 0 assignments
+all CSP tests passed
