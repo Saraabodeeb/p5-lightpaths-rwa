@@ -1,0 +1,71 @@
+
+========================================================================
+1. SEARCH TRACE: UCS vs A*
+========================================================================
+
+[UCS] SNVA -> NYCM
+step expanded path                          g km     h km     f km
+   1 SNVA                                    0.0      0.0      0.0
+   2 SNVA > LOSA                           503.6      0.0    503.6
+   3 SNVA > STTL                          1136.0      0.0   1136.0
+   4 SNVA > DNVR                          1514.0      0.0   1514.0
+   5 SNVA > DNVR > KSCY                   2258.0      0.0   2258.0
+   6 SNVA > LOSA > HSTN                   2696.6      0.0   2696.6
+   7 SNVA > STTL > DNVR                   2707.0      0.0   2707.0
+   8 SNVA > DNVR > STTL                   3085.0      0.0   3085.0
+   9 SNVA > DNVR > KSCY > IPLS            3159.3      0.0   3159.3
+  10 SNVA > DNVR > KSCY > HSTN            3284.8      0.0   3284.8
+  11 SNVA > DNVR > KSCY > IPLS > CHIN     3418.4      0.0   3418.4
+  12 SNVA > STTL > DNVR > KSCY            3451.0      0.0   3451.0
+  13 SNVA > LOSA > HSTN > KSCY            3723.4      0.0   3723.4
+  14 SNVA > LOSA > HSTN > ATLA            3837.7      0.0   3837.7
+  15 SNVA > LOSA > HSTN > ATLA > ATLA-M5   3837.7      0.0   3837.7
+  16 SNVA > DNVR > KSCY > IPLS > ATLA     3848.2      0.0   3848.2
+  17 SNVA > DNVR > KSCY > IPLS > ATLA > ATLA-M5   3848.2      0.0   3848.2
+  18 SNVA > STTL > DNVR > KSCY > IPLS     4352.2      0.0   4352.2
+  19 SNVA > DNVR > KSCY > HSTN > ATLA     4425.9      0.0   4425.9
+  20 SNVA > DNVR > KSCY > HSTN > ATLA > ATLA-M5   4425.9      0.0   4425.9
+  21 SNVA > LOSA > HSTN > KSCY > DNVR     4467.5      0.0   4467.5
+  22 SNVA > STTL > DNVR > KSCY > HSTN     4477.8      0.0   4477.8
+  23 SNVA > LOSA > HSTN > ATLA > IPLS     4526.6      0.0   4526.6
+GOAL: SNVA > DNVR > KSCY > IPLS > CHIN > NYCM  cost 4563.2 km
+states expanded: 23
+
+[ASTAR] SNVA -> NYCM
+step expanded path                          g km     h km     f km
+   1 SNVA                                    0.0   4113.3   4113.3
+   2 SNVA > DNVR                          1514.0   2599.7   4113.7
+   3 SNVA > DNVR > KSCY                   2258.0   1936.4   4194.4
+   4 SNVA > DNVR > KSCY > IPLS            3159.3   1039.4   4198.7
+   5 SNVA > LOSA                           503.6   3939.2   4442.8
+   6 SNVA > DNVR > KSCY > IPLS > CHIN     3418.4   1144.9   4563.2
+GOAL: SNVA > DNVR > KSCY > IPLS > CHIN > NYCM  cost 4563.2 km
+states expanded: 6
+
+========================================================================
+2. CSP WITH AND WITHOUT FORWARD CHECKING / AC-3
+========================================================================
+
+a) two requests with the same only route, 1 wavelength (impossible)
+method     result        assignments  backtracks  AC-3 removed
+BT         no_solution             1           1             0
+BT+FC      no_solution             1           1             0
+BT+FC+AC3  no_solution             0           0             1
+
+b) real instance: test hour 720, K=16 requests, W=3 wavelengths
+method     result        assignments  backtracks  AC-3 removed
+BT         limit              100001       99987             0
+BT+FC      no_solution          6276        6276             0
+BT+FC+AC3  no_solution          6276        6276             0
+'limit' = assignment cap reached: no answer, which is NOT a proof of infeasibility.
+
+========================================================================
+3. WHOLE SYSTEM WITH NN ON vs OFF (W=4, K=20)
+========================================================================
+test hour   NN on                        NN off (last hour)          
+       10   19/20 true top-K served, 0 blocked 19/20 true top-K served, 0 blocked
+       40   18/20 true top-K served, 2 blocked 18/20 true top-K served, 1 blocked
+       80   19/20 true top-K served, 0 blocked 18/20 true top-K served, 0 blocked
+      120   18/20 true top-K served, 2 blocked 17/20 true top-K served, 3 blocked
+      160   18/20 true top-K served, 1 blocked 18/20 true top-K served, 1 blocked
+Only 5 hours are shown. All 168 hours with confidence intervals: results/exp3.txt
