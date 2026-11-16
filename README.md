@@ -24,7 +24,7 @@ requirements.txt was produced with pip freeze from this environment.
 - germany50 (50 nodes, 88 cables): GML file from TopoHub (copy of the SNDlib network), committed as data/germany50.gml. Used only in experiment 1. Licence not verified.
 - data_dictionary.md lists every field and says what is real and what is generated (reach limit, number of wavelengths, CSP assignment cap).
 
-make_data.py downloads the Abilene files into data/ if they are missing and builds data/processed/hourly.npz (840 hours x 12 x 12). The server is old and can be very slow (a 7 MB file took about 15 minutes in one test). On macOS with Python from python.org, a CERTIFICATE_VERIFY_FAILED error is fixed by running "Install Certificates.command" in the Python application folder.
+make_data.py downloads the Abilene files into data/ if they are missing and builds data/processed/hourly.npz (840 hours x 12 x 12). The server is old and can be very slow (in one test it delivered about 8 KB per second and the test was interrupted, so a full 7 MB download can take many minutes). On macOS with Python from python.org, a CERTIFICATE_VERIFY_FAILED error is fixed by running "Install Certificates.command" in the Python application folder.
 
 Split (hours of the 840): 0-167 history only (needed for the same-hour-last-week feature), 168-623 train, 624-671 validation, 672-839 test (week X10).
 
@@ -44,7 +44,7 @@ All commands are run from the project folder with the environment active.
     python run_demo.py           # integrated demo, writes demo_output.png
     python demo_live.py          # live demo: search trace, CSP with and without FC / AC-3, NN on vs off
 
-The first call that needs the NN predictions trains 5 networks (about 1 minute) and caches them in data/processed/nn_test_preds.npy. Outputs of the tests and experiments are saved in results/.
+The first call that needs the NN predictions trains 5 networks (about 1 minute) and caches them in data/processed/nn_test_preds.npy. Outputs of the tests and experiments are saved in results/. The running times in the comments above are rough estimates, not measurements.
 
 ## Files and modules
 | Module | Files |
@@ -60,9 +60,9 @@ The first call that needs the NN predictions trains 5 networks (about 1 minute) 
 Exploratory scripts kept for history (superseded by the final experiment scripts): run_csp_demo.py, run_exp2.py, exp2b.py, run_exp3.py, run_exp3b.py, inspect_g50.py, look.py.
 
 ## Main results (details in results/)
-- Search: A* and UCS costs match networkx on all 132 Abilene pairs and all 2450 germany50 pairs; the heuristic never overestimates. A* expands far fewer states than UCS on germany50: 6.9 vs 275.7 partial paths in the main (tree search) implementation, but 6.0 vs 24.9 unique nodes with an explored set, k=1 (4.1x instead of about 40x), so most of the headline gap comes from the state representation. In time (Python, sub-millisecond) the graph-search gap is only about 1.5x on germany50, and A* is not faster on Abilene (results/exp1b.txt). BFS returns the fewest-hops route, which is 4% (Abilene) to 11% (germany50) longer in km. Counters count partial paths, because a state is a node together with the path so far.
+- Search: A* and UCS costs match networkx on all 132 Abilene pairs and all 2450 germany50 pairs; the heuristic never overestimates. A* expands far fewer states than UCS on germany50: 6.9 vs 275.7 partial paths in the main (tree search) implementation, but 6.0 vs 24.9 unique nodes with an explored set, k=1 (4.1x instead of about 40x), so a large part of the headline gap comes from the state representation. In time (Python, sub-millisecond) the graph-search gap is about 1.5x on germany50 (about 24x for tree search), and A* is not faster on Abilene (results/exp1b.txt). BFS returns the fewest-hops route, which is 4% (Abilene) to 11% (germany50) longer in km. Counters count partial paths, because a state is a node together with the path so far.
 - CSP: with 3 wavelengths, Forward Checking roughly halves the assignments and proves infeasibility in more cases than plain backtracking. With 4 or more wavelengths the three methods are close. AC-3 removed nothing in these instances, so it equals Forward Checking.
-- NN: its top-K hit rate on the test week is within about 0.7 percentage points of the last-hour baseline. Inside the system it serves slightly more of the true top-20 at 4 wavelengths (+0.8 points) and slightly fewer of the true top-15 at 3 wavelengths (-1.4 points). The ceiling (perfect forecast) is clearly higher than both, so network capacity limits the result more than forecast quality.
+- NN: its top-K hit rate on the test week is within about 0.7 percentage points of the last-hour baseline (slightly above it), but on the validation hours its MAE is slightly worse (0.3974 vs 0.3923, log units), so there is no consistent improvement. Inside the system it serves slightly more of the true top-20 at 4 wavelengths (+0.8 points) and slightly fewer of the true top-15 at 3 wavelengths (-1.4 points). The ceiling (perfect forecast) is clearly higher than both, so network capacity limits the result more than forecast quality.
 
 ## Limitations
 - One test week (X10); the confidence intervals use blocks of 6 hours and do not cover other weeks.
