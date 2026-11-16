@@ -38,6 +38,7 @@ All commands are run from the project folder with the environment active.
     python test_csp.py           # CSP tests: 5 normal, 3 edge, 2 impossible
     python test_system.py        # whole-system tests: 5 normal, 3 edge, 2 impossible
     python exp1.py               # experiment 1: BFS vs UCS vs A* (1-2 minutes)
+    python exp1b_graph_search.py # supplementary: tree search vs graph search with an explored set (a few minutes)
     python exp2_final.py         # experiment 2: BT vs BT+FC vs BT+FC+AC3 (5-10 minutes)
     python exp3_final.py         # experiment 3: NN vs last hour inside the system (10-15 minutes)
     python run_demo.py           # integrated demo, writes demo_output.png
@@ -53,13 +54,13 @@ The first call that needs the NN predictions trains 5 networks (about 1 minute) 
 | search | search.py (BFS / UCS / A* with counters) |
 | csp | csp.py (BT, FC, AC-3 with counters), oracle.py (independent OR-tools solver, used only to label cases as feasible or infeasible) |
 | integration | integration.py (plan()), run_demo.py, demo_live.py |
-| eval | exp1.py, exp2_final.py, exp3_final.py |
+| eval | exp1.py, exp1b_graph_search.py, exp2_final.py, exp3_final.py |
 | tests | test_search.py, test_csp.py, test_system.py |
 
 Exploratory scripts kept for history (superseded by the final experiment scripts): run_csp_demo.py, run_exp2.py, exp2b.py, run_exp3.py, run_exp3b.py, inspect_g50.py, look.py.
 
 ## Main results (details in results/)
-- Search: A* and UCS costs match networkx on all 132 Abilene pairs and all 2450 germany50 pairs; the heuristic never overestimates. A* expands far fewer states than UCS on germany50 (6.9 vs 275.7 for the best route). BFS returns the fewest-hops route, which is 4% (Abilene) to 11% (germany50) longer in km. Counters count partial paths, because a state is a node together with the path so far.
+- Search: A* and UCS costs match networkx on all 132 Abilene pairs and all 2450 germany50 pairs; the heuristic never overestimates. A* expands far fewer states than UCS on germany50: 6.9 vs 275.7 partial paths in the main (tree search) implementation, but 6.0 vs 24.9 unique nodes with an explored set (4.1x instead of about 40x), so most of the headline gap comes from the state representation. In time (Python, sub-millisecond) the graph-search gap is only about 1.5x on germany50, and A* is not faster on Abilene (results/exp1b.txt). BFS returns the fewest-hops route, which is 4% (Abilene) to 11% (germany50) longer in km. Counters count partial paths, because a state is a node together with the path so far.
 - CSP: with 3 wavelengths, Forward Checking roughly halves the assignments and proves infeasibility in more cases than plain backtracking. With 4 or more wavelengths the three methods are close. AC-3 removed nothing in these instances, so it equals Forward Checking.
 - NN: its top-K hit rate on the test week is within about 0.7 percentage points of the last-hour baseline. Inside the system it serves slightly more of the true top-20 at 4 wavelengths (+0.8 points) and slightly fewer of the true top-15 at 3 wavelengths (-1.4 points). The ceiling (perfect forecast) is clearly higher than both, so network capacity limits the result more than forecast quality.
 
